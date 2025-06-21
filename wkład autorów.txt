@@ -2,4 +2,4 @@ Anzhelika Sapryka opracowała kompletną strukturę kodu, tworząc wszystkie def
 
 Jan Famulski stworzył implementację instrukcji, okienko z indetyfikacja badanych i komentarze do kodu.
 
-Natalia Andrzejewska stworzyła mechnizm rejestrowania wyników oraz zapisywania ich w pliku csv.
+Natalia Andrzejewska stworzyła mechnizm rejestrowania wyników oraz zapisywania ich w pliku csv. Była również odpowiedzialna za repozytorium GitHub.
