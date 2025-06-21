@@ -6,7 +6,7 @@ Sekwencja pojawi się na szarych (trening) lub kolorowych kwadratach.
 Faza prezentacji: Na ekranie pojawi się 9 rozmieszczonych bloków. Zobaczysz serię migających bloków – każdy z nich zapali się na chwilę, jeden po drugim, w określonej kolejności. Uwaga! Każdy blok zapala się tylko raz.
 
 
-Faza odtworzenia: Po zakończeniu sekwencji na dole ekranu pojawi się komunikat ,,TERAZ” klikaj myszką w te same bloki, w tej samej kolejności, w jakiej się zapaliły. Każdy blok możesz wybrać tylko raz. Po zakończeniu wyboru naciśnij przycisk „ZAKOŃCZ”, aby sprawdzić poprawność. Z każdą poprawnie odtworzoną sekwencją liczba zapalanych bloków będzie się zwiększać o jeden.
+Faza odtworzenia: Po zakończeniu sekwencji na dole ekranu pojawi się komunikat "TERAZ" klikaj myszką w te same bloki, w tej samej kolejności, w jakiej się zapaliły. Każdy blok możesz wybrać tylko raz. Po zakończeniu wyboru naciśnij przycisk "ZAKOŃCZ", aby sprawdzić poprawność. Z każdą poprawnie odtworzoną sekwencją liczba zapalanych bloków będzie się zwiększać o jeden.
 
 Przykład:
 
