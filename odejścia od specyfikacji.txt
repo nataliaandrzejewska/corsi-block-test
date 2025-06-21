@@ -1,1 +1,7 @@
-xyz
+1. Przerwa między poszczególnymi sesjami trwa 5 sekund, nie 30.
+
+2. Kolor bloków w sesji treningowej jest ciemno szary, nie szary.
+
+3. Sesja treningowa zawiera tylko trzy próby (nie jest pełna).
+
+4. Komunikaty "DOBRZE" i "ŹLE" widoczne są przez jedną sekundę, a nie dwie.
