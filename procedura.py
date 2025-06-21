@@ -300,7 +300,7 @@ first_color = random.choice(['#FF0000', '#0000FF'])
 second_color = '#0000FF' if first_color == '#FF0000' else '#FF0000'
 
 for session_num, color in [(1, first_color), (2, second_color)]:
-    errors = 0
+    consecutive_errors = 0
     current_length = 2  # Reset długości sekwencji
     blocks = create_blocks([color] * n_blocks)
 
@@ -308,7 +308,7 @@ for session_num, color in [(1, first_color), (2, second_color)]:
     core.wait(1.0)
     show_ready_prompt()
 
-    while errors < MAX_ERRORS:
+    while consecutive_errors < MAX_ERRORS:
         # Zabezpieczenie przed sekwencjami dłuższymi niż liczba bloków
         if current_length > n_blocks:
             current_length = n_blocks
@@ -320,15 +320,16 @@ for session_num, color in [(1, first_color), (2, second_color)]:
         # Zapis wyników
         RESULTS.append([
             PART_ID, wiek, plec, session_num, color, len(sequence),
-            sequence, resp, correct, ict, errors, rt
+            sequence, resp, correct, ict, consecutive_errors, rt
         ])
 
         # Aktualizacja parametrów trudności
         if correct:
             if current_length < n_blocks:  # Nie zwiększaj powyżej maksimum
                 current_length += 1
+            consecutive_errors = 0 #Resetuj liczbę błędów po sukcesie
         else:
-            errors += 1
+            consecutive_errors += 1
 
     if session_num == 1:
         show_break(2)
