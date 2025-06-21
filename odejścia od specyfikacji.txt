@@ -1,6 +1,6 @@
-1. Przerwa między poszczególnymi sesjami trwa 5 sekund, nie 30.
+1. Przerwa między poszczególnymi sesjami trwa 5 sekund, nie 30 -> doszliśmy do wniosku, że 30 sekund jest niepotrzebnie długim okresem w trakcie, którego badany prawdopodobnie uległby rozproszeniom.
 
-2. Kolor bloków w sesji treningowej jest ciemno szary, nie szary.
+2. Kolor bloków w sesji treningowej jest ciemno szary, nie szary -> zmiana wprowadzona dla większego kontrastu przy podświetlaniu bloków, które trudno dojrzeć przy jaśniejszych odcieniach.
 
 3. Sesja treningowa zawiera tylko trzy próby (nie jest pełna).
 
