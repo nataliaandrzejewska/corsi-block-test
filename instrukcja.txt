@@ -13,7 +13,7 @@ Przykład:
 Jeśli zapaliły się kolejno bloki (1, 2, 3):
 
 należy kliknąć bloki w tej samej kolejności: 1 → 2 → 3, 
-            a następnie nacisnąć przycisk „ZAKOŃCZ”.
+            a następnie nacisnąć przycisk "ZAKOŃCZ".
 
 Przebieg badania: 
 Zanim rozpocznie się sesja eksperymentalna, weźmiesz udział w sesji treningowej, która pomoże Ci lepiej zrozumieć zasady zadania. Po każdej sesji przewidziana jest 5 sekundowa przerwa. Podczas każdej sesji dopuszczalne są maksymalnie dwa błędy w jednej turze. Po drugim błędnym odtworzeniu sekwencji dana sesja zostaje zakończona:
