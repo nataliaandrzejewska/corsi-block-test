@@ -1,0 +1,22 @@
+INSTRUKCJA WYKONYWANIA ZADANIA
+
+Twoim zadaniem będzie zapamiętanie i powtórzenie sekwencji świateł pojawiających się na niebieskich lub czerwonych blokach (kwadratach). Zadanie to zostanie przeprowadzone w ramach dwóch sesji eksperymentalnych. 
+Sekwencja pojawi się na szarych (trening) lub kolorowych kwadratach.
+
+Faza prezentacji: Na ekranie pojawi się 9 rozmieszczonych bloków. Zobaczysz serię migających bloków – każdy z nich zapali się na chwilę, jeden po drugim, w określonej kolejności. Uwaga! Każdy blok zapala się tylko raz.
+
+
+Faza odtworzenia: Po zakończeniu sekwencji na dole ekranu pojawi się komunikat ,,TERAZ” klikaj myszką w te same bloki, w tej samej kolejności, w jakiej się zapaliły. Każdy blok możesz wybrać tylko raz. Po zakończeniu wyboru naciśnij przycisk „ZAKOŃCZ”, aby sprawdzić poprawność. Z każdą poprawnie odtworzoną sekwencją liczba zapalanych bloków będzie się zwiększać o jeden.
+
+Przykład:
+
+Jeśli zapaliły się kolejno bloki (1, 2, 3):
+
+należy kliknąć bloki w tej samej kolejności: 1 → 2 → 3, 
+            a następnie nacisnąć przycisk „ZAKOŃCZ”.
+
+Przebieg badania: 
+Zanim rozpocznie się sesja eksperymentalna, weźmiesz udział w sesji treningowej, która pomoże Ci lepiej zrozumieć zasady zadania. Po każdej sesji przewidziana jest 5 sekundowa przerwa. Podczas każdej sesji dopuszczalne są maksymalnie dwa błędy w jednej turze. Po drugim błędnym odtworzeniu sekwencji dana sesja zostaje zakończona:
+	- w przypadku pierwszej sesji następuje przejście do drugiej sesji.
+	- w przypadku drugiej sesji badanie zostaje zakończone, a na ekranie pojawi się komunikat z wynikami oraz informacją o zakończeniu badania.
+
