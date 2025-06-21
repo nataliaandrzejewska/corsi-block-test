@@ -20,3 +20,5 @@ Zanim rozpocznie się sesja eksperymentalna, weźmiesz udział w sesji treningow
 	- w przypadku pierwszej sesji następuje przejście do drugiej sesji.
 	- w przypadku drugiej sesji badanie zostaje zakończone, a na ekranie pojawi się komunikat z wynikami oraz informacją o zakończeniu badania.
 
+
+Aby przejść dalej, naciśnij spację.
