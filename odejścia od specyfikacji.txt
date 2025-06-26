@@ -5,3 +5,5 @@
 3. Sesja treningowa zawiera tylko trzy próby -> uznano, że jest to wystarczająca liczba do zapoznania się z mechanizmem działania zadania. Celem tej części jest jedynie demonstracja, a nie pełne ćwiczenie, dlatego nie ma potrzeby jej nadmiernie przedłużać.
 
 4. Komunikaty "DOBRZE" i "ŹLE" widoczne są przez jedną sekundę, a nie dwie -> decyzja ta wynika z obserwacji – dłuższa przerwa spowalniała rytm zadania, a jednosekundowy czas okazał się optymalny: wystarczający, by uczestnik odczytał informację zwrotną, ale na tyle krótki, by zachować płynność przebiegu sesji.
+
+5. Wszystkie parametry zostały dodane do pliku konfiguracyjnego yaml, nie było to opisane w specyfikacji -> pozwala to na łatwą modyfikację parametrów bez ingerencji w kod, zwiększa czytelność i pozwala uniknąć błędu występowania tzw. "magic numbers"
