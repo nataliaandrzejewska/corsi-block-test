@@ -1,0 +1,81 @@
+
+monitor:
+  name: testMonitor
+  width_cm: 53.0
+  distance_cm: 60.0
+  resolution: [1920, 1080]
+
+window:
+  fullscreen: true
+  color: [-1, -1, -1]
+  units: height
+
+blocks:
+  count: 9
+  size: 0.125
+  margin_y: 0.2
+  max_overlap_attempts: 1000
+  attempts: 0
+
+buttons:
+  done:
+    pos: [0.6, -0.4]
+    width: 0.25
+    height: 0.1
+    color_fill: "#FFFFFF"
+    color_line: "#FFFFFF"
+    text:
+      content: "ZAKOŃCZ"
+      color: "#000000"
+      height: 0.04
+
+feedback:
+  correct_text: "DOBRZE"
+  incorrect_text: "ŹLE"
+  position: [0.0, -0.4]
+  color: "#FFFFFF"
+  height: 0.05
+  display_time: 2.0
+
+start:
+  text: "TERAZ"
+  position: [0.0, -0.4]
+  color: "#FFFFFF"
+  height: 0.06
+
+timing:
+  flash_on: 0.6
+  flash_off: 0.4
+  post_click_flash: 0.2
+  break_time: 5.0
+  ready_prompt_delay: 1.0
+  pre_sequence_delay: 0.5
+  now_text_delay: 0.5
+  response_poll_interval: 0.01
+  post_click_delay: 0.3
+  session_name_delay: 1.0
+
+colors:
+  training_block: [0.2, 0.2, 0.2]
+  flash: "#FFFFFF"
+  click: "#FFFFFF"
+  session_colors: ["#FF0000", "#0000FF"]
+  text_default: "#FFFFFF"
+
+text:
+  default_height: 0.04
+  small_height: 0.018
+  wrap_width: 0.9
+
+experiment:
+  max_errors: 2
+  training_trials: 3
+  initial_sequence_length: 2
+
+results:
+  file: wyniki.csv
+  headers: [
+    "ID", "Wiek", "Płeć", "Sesja", "Kolor", "Długość sekwencji",
+    "Prezentowane bloki", "Kliknięcia uczestnika", "Poprawność",
+    "Czasy między kliknięciami", "Błędy", "Czas reakcji"]
+
