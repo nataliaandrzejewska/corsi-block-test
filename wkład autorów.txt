@@ -4,4 +4,4 @@ Jan Famulski stworzył pełną implementację instrukcji użytkownika wraz z int
 
 Milena Kisielewska doprecyzowała odliczanie czasu w kodzie oraz dostosowała kolorystykę zgodnie ze specyfikacją.
 
-Natalia Andrzejewska stworzyła mechnizm rejestrowania wyników oraz zapisywania ich w pliku csv. Była również odpowiedzialna za repozytorium GitHub.
+Natalia Andrzejewska stworzyła plik konfiguracyjny .yaml, mechnizm rejestrowania wyników oraz zapisywania ich w pliku csv. Była również odpowiedzialna za repozytorium GitHub.
