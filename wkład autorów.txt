@@ -1,5 +1,7 @@
-Anzhelika Sapryka opracowała kompletną strukturę kodu, tworząc wszystkie definicje, wizualizacje oraz mechanizmy podświetlania, pętle, sesji, przejścia. Dodała również możliwość wycofania się na każdym etapie z programu oraz zaprojektowała interfejs użytkownika : przyciski i wszystkie napisy.
+Anzhelika Sapryka opracowała kompletną strukturę kodu, tworząc wszystkie definicje, wizualizacje oraz mechanizmy podświetlania, pętle, przejścia. Dodała również możliwość wycofania się na każdym etapie z programu oraz zaprojektowała interfejs użytkownika: przyciski i wszystkie napisy.
 
-Jan Famulski stworzył implementację instrukcji, okienko z indetyfikacja badanych i komentarze do kodu.
+Jan Famulski stworzył pełną implementację instrukcji użytkownika wraz z interfejsem graficznym zawierającym okno identyfikacji badanych oraz możliwością wprowadzania danych. Dodatkowo opisał kod przy pomocy komentarzy.
 
-Natalia Andrzejewska stworzyła mechnizm rejestrowania wyników oraz zapisywania ich w pliku csv.
+Milena Kisielewska doprecyzowała odliczanie czasu w kodzie oraz dostosowała kolorystykę zgodnie ze specyfikacją.
+
+Natalia Andrzejewska stworzyła mechnizm rejestrowania wyników oraz zapisywania ich w pliku csv. Była również odpowiedzialna za repozytorium GitHub.

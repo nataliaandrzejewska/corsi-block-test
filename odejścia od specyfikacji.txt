@@ -1,1 +1,7 @@
-xyz
+1. Przerwa między poszczególnymi sesjami trwa 5 sekund, nie 30 -> uznano, że 30 sekund jest niepotrzebnie długim okresem, w trakcie którego badany prawdopodobnie uległby rozproszeniom. 
+
+2. Kolor bloków w sesji treningowej jest ciemno szary, nie szary -> zmiana została wprowadzona dla większego kontrastu przy podświetlaniu bloków, które trudno dojrzeć przy jaśniejszych odcieniach.
+
+3. Sesja treningowa zawiera tylko trzy próby -> uznano, że jest to wystarczająca liczba do zapoznania się z mechanizmem działania zadania. Celem tej części jest jedynie demonstracja, a nie pełne ćwiczenie, dlatego nie ma potrzeby jej nadmiernie przedłużać.
+
+4. Komunikaty "DOBRZE" i "ŹLE" widoczne są przez jedną sekundę, a nie dwie -> decyzja ta wynika z obserwacji – dłuższa przerwa spowalniała rytm zadania, a jednosekundowy czas okazał się optymalny: wystarczający, by uczestnik odczytał informację zwrotną, ale na tyle krótki, by zachować płynność przebiegu sesji.
