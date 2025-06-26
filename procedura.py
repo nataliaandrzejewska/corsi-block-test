@@ -4,14 +4,20 @@ from psychopy import visual, event, core, gui, monitors
 import random
 import os
 import csv
+import yaml
+
+# wczytanie pliku konfiguracyjnego
+with open('config.yaml', 'r', encoding='utf-8') as f:
+    config = yaml.safe_load(f)
+
 
 # === KONFIGURACJA MONITORA ===
 monitor_name = 'testMonitor'
 if monitor_name not in monitors.getAllMonitors():
     mon = monitors.Monitor(monitor_name)
-    mon.setWidth(53.0)  # Szerokość ekranu w cm
-    mon.setDistance(60.0)  # Odległość oczu od ekranu w cm
-    mon.setSizePix([1920, 1080])  # Rozdzielczość ekranu
+    mon.setWidth(config['monitor']['width_cm'])  # Szerokość ekranu w cm
+    mon.setDistance(config['monitor']['distance_cm'])  # Odległość oczu od ekranu w cm
+    mon.setSizePix(config['monitor']['resolution'])  # Rozdzielczość ekranu
     mon.save()
 
 # === OKNO DIALOGOWE DLA UCZESTNIKA ===
@@ -30,31 +36,38 @@ wiek = wynik_dialog[1]
 plec = wynik_dialog[2]
 
 # === PARAMETRY EKSPERYMENTU ===
-win = visual.Window(fullscr=True, color=[-1, -1, -1], units='height', monitor=monitor_name)
-n_blocks = 9  # ilość bloków
-block_size = 0.125  # rozmiar bloków
+win = visual.Window(fullscr=config['window']['fullscreen'],
+                    color=config['window']['color'],
+                    units=config['window']['units'],
+                    monitor=monitor_name)
+n_blocks = config['blocks']['count']  # ilość bloków
+block_size = config['blocks']['size']  # rozmiar bloków
 RESULTS = []  # wyniki
-MAX_ERRORS = 2  # maksymalna liczba błędów
+MAX_ERRORS = config['experiment']['max_errors']  # maksymalna liczba błędów
 
 conf = {
     "BLOCK_COLOR_TRAINING": [[0.2, 0.2, 0.2]] * n_blocks,  # Ciemnoszare bloki
 }
 
 # === Przycisk ZAKOŃCZ – definiujemy raz ===
-done_button = visual.Rect(win, width=0.25, height=0.1, pos=(0.6, -0.4),
-                          fillColor='#FFFFFF', lineColor='#FFFFFF')
-done_text = visual.TextStim(win, text="ZAKOŃCZ", pos=(0.6, -0.4),
-                            color='#000000', height=0.04,
+done_cfg = config['buttons']['done']
+done_button = visual.Rect(win, width=done_cfg['width'], height=done_cfg['height'],
+                          pos=done_cfg['pos'],
+                          fillColor=done_cfg['color_fill'],
+                          lineColor=done_cfg['color_line'])
+done_text = visual.TextStim(win, text=done_cfg['text']['content'], pos=done_cfg['pos'],
+                            color=done_cfg['text']['color'],
+                            height=done_cfg['text']['height'],
                             anchorHoriz='center', anchorVert='center')
 
 
 def generate_non_overlapping_positions(n):
     """Generuje pozycje bloków bez nakładania się"""
     positions = []
-    attempts = 0
-    margin_y = 0.2  # Margines na górze i dole ekranu
+    attempts = config['blocks']['attempts']
+    margin_y = config['blocks']['margin_y'] # Margines na górze i dole ekranu
 
-    while len(positions) < n and attempts < 1000:
+    while len(positions) < n and attempts < config['blocks']['max_overlap_attempts']:
         x = random.uniform(-0.45, 0.45)
         y = random.uniform(-0.45 + margin_y, 0.45 - margin_y)
         pos = (x, y)
@@ -110,18 +123,18 @@ def flash_sequence(blocks, sequence):
         orig_color = blocks[i].fillColor
 
         # Podświetlenie bloku
-        blocks[i].fillColor = '#FFFFFF'
-        blocks[i].lineColor = '#FFFFFF'
+        blocks[i].fillColor = config['colors']['flash']
+        blocks[i].lineColor = config['colors']['flash']
         draw_blocks(blocks)
         win.flip()
-        core.wait(0.6)  # Czas podświetlenia
+        core.wait(config['timing']['flash_on'])  # Czas podświetlenia
 
         # Przywrócenie oryginalnego koloru
         blocks[i].fillColor = orig_color
         blocks[i].lineColor = orig_color
         draw_blocks(blocks)
         win.flip()
-        core.wait(0.4)  # Przerwa między mignięciami
+        core.wait(config['timing']['flash_off'])  # Przerwa między mignięciami
 
 
 def get_response(blocks, target_sequence, session_type="training"):
@@ -162,11 +175,11 @@ def get_response(blocks, target_sequence, session_type="training"):
 
                     # Wizualna odpowiedź na kliknięcie
                     orig_color = b.fillColor
-                    b.fillColor = '#FFFFFF'
-                    b.lineColor = '#FFFFFF'
+                    b.fillColor = config['colors']['click']
+                    b.lineColor = config['colors']['click']
                     draw_blocks(blocks)
                     win.flip()
-                    core.wait(0.2)
+                    core.wait(config['timing']['post_click_flash'])
 
                     # Przywrócenie oryginalnego koloru
                     b.fillColor = orig_color
@@ -175,21 +188,25 @@ def get_response(blocks, target_sequence, session_type="training"):
                     # Sprawdź czy kliknięto przycisk ZAKOŃCZ
             if done_button.contains(mouse):
                 responded = True
-                core.wait(0.3)  # Zapobieganie podwójnemu kliknięciu
+                core.wait(config['timing']['post_click_delay'])  # Zapobieganie podwójnemu kliknięciu
 
-        core.wait(0.01)
+        core.wait(config['timing']['response_poll_interval'])
 
     rt = rt_clock.getTime()
     correct = is_correct(target_sequence, response)
 
     # Wyświetlenie informacji zwrotnej
-    feedback_text = visual.TextStim(win, text="DOBRZE" if correct else "ŹLE",
-                                    pos=(0.0, -0.4), color='#FFFFFF', height=0.05,
-                                    anchorHoriz='center', anchorVert='center')
+    fb_cfg = config['feedback']
+    feedback_text = visual.TextStim(win, text=fb_cfg['correct_text'] if correct else fb_cfg['incorrect_text'],
+        pos=fb_cfg['position'],
+        color=fb_cfg['color'],
+        height=fb_cfg['height'],
+        anchorHoriz='center', anchorVert='center')
     draw_blocks(blocks)
     feedback_text.draw()
     win.flip()
-    core.wait(2.0)
+    core.wait(fb_cfg['display_time'])
+
 
     return response, rt, correct, inter_click_times
 
@@ -201,7 +218,7 @@ def is_correct(target, response):
 
 def show_message(text, wait_for_key=True):
     """Wyświetla wiadomość na ekranie"""
-    msg = visual.TextStim(win, text=text, color='#FFFFFF', height=0.04, wrapWidth=0.9,
+    msg = visual.TextStim(win, text=text, color=config['colors']['text_default'], height=config['text']['default_height'], wrapWidth=config['text']['wrap_width'],
                           anchorHoriz='center', anchorVert='center')
     msg.draw()
     win.flip()
@@ -221,27 +238,27 @@ def show_ready_prompt():
 def show_break(stage):
     """Ekran przerwy między etapami"""
     msg = visual.TextStim(win, text=f"Przerwa 5 sekund.\nEtap {stage} z 3 ukończony.",
-                          color='#FFFFFF', height=0.04, anchorHoriz='center', anchorVert='center')
+                          color=config['colors']['text_default'], height=config['text']['default_height'], anchorHoriz='center', anchorVert='center')
     msg.draw()
     win.flip()
-    core.wait(5)
+    core.wait(config['timing']['break_time'])
 
 
 def run_sequence_phase(blocks, sequence):
     """Przebieg fazy prezentacji sekwencji"""
     draw_blocks(blocks)
     win.flip()
-    core.wait(0.5)
+    core.wait(config['timing']['pre_sequence_delay'])
 
     flash_sequence(blocks, sequence)
 
     # Wyświetlenie komunikatu "TERAZ"
-    prompt = visual.TextStim(win, text="TERAZ", pos=(0.0, -0.4), color='#FFFFFF', height=0.06,
+    prompt = visual.TextStim(win, text=config['start']['text'], pos=config['start']['position'], color=config['start']['color'], height=config['start']['height'],
                              anchorHoriz='center', anchorVert='center')
     draw_blocks(blocks)
     prompt.draw()
     win.flip()
-    core.wait(0.5)
+    core.wait(config['timing']['now_text_delay'])
 
 
 # === WCZYTANIE INSTRUKCJI ===
@@ -251,9 +268,9 @@ try:
 
         # Wyświetlenie instrukcji z mniejszą czcionką
     instrukcja_stim = visual.TextStim(win, text=instrukcja_text,
-                                      color='#FFFFFF',
-                                      height=0.018,  # Zmniejszona czcionka
-                                      wrapWidth=0.9,
+                                      color=config['colors']['text_default'],
+                                      height=config['text']['small_height'],  # Zmniejszona czcionka
+                                      wrapWidth=config['text']['wrap_width'],
                                       anchorHoriz='center', anchorVert='center')
     instrukcja_stim.draw()
     win.flip()
@@ -265,14 +282,14 @@ except FileNotFoundError:
     core.quit()
 
 # === FAZA TRENINGOWA ===
-current_length = 2
+current_length = config['experiment']['initial_sequence_length']
 blocks = create_blocks(conf["BLOCK_COLOR_TRAINING"])
 show_message("Część treningowa", wait_for_key=False)
-core.wait(1.0)
+core.wait(config['timing']['session_name_delay'])
 show_ready_prompt()
 
 # 3 próby treningowe z rosnącą trudnością
-for _ in range(3):
+for _ in range(config['experiment']['training_trials']):
     # Zabezpieczenie przed sekwencjami dłuższymi niż liczba bloków
     if current_length > n_blocks:
         current_length = n_blocks
@@ -301,11 +318,11 @@ second_color = '#0000FF' if first_color == '#FF0000' else '#FF0000'
 
 for session_num, color in [(1, first_color), (2, second_color)]:
     consecutive_errors = 0
-    current_length = 2  # Reset długości sekwencji
+    current_length = config['experiment']['initial_sequence_length']  # Reset długości sekwencji
     blocks = create_blocks([color] * n_blocks)
 
     show_message(f"Sesja eksperymentalna {session_num}", wait_for_key=False)
-    core.wait(1.0)
+    core.wait(config['timing']['session_name_delay'])
     show_ready_prompt()
 
     while consecutive_errors < MAX_ERRORS:
@@ -346,7 +363,7 @@ final_msg = (f"Zadanie zakończone\n\nTwój zakres pamięci (Corsi span):\n"
 show_message(final_msg)
 
 # === ZAPIS DANYCH ===
-results_file = "wyniki.csv"
+results_file = config['results']['file']
 file_exists = os.path.isfile(results_file)
 
 with open(results_file, 'a', encoding='utf-8', newline='') as f:
@@ -354,11 +371,7 @@ with open(results_file, 'a', encoding='utf-8', newline='') as f:
 
     # Nagłówek jeśli plik nie istnieje
     if not file_exists:
-        writer.writerow([
-            "ID", "Wiek", "Płeć", "Sesja", "Kolor", "Długość sekwencji",
-            "Prezentowane bloki", "Kliknięcia uczestnika", "Poprawność",
-            "Czasy między kliknięciami", "Błędy", "Czas reakcji"
-        ])
+        writer.writerow([config['results']['headers']])
 
         # Zapis każdego wiersza wyników
     for row in RESULTS:
