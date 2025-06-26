@@ -29,9 +29,9 @@ info_dialog.addField('Płeć:', choices=['Kobieta', 'Mężczyzna', 'Inna'])
 wynik_dialog = info_dialog.show()
 
 if not info_dialog.OK:
-    core.quit()
+    core.quit() #Zakończenie programu, gdy okno dialogowe zostaje anulowane
 
-PART_ID = wynik_dialog[0]
+PART_ID = wynik_dialog[0] #ID uczestnika, użuwane do zapisu danych
 wiek = wynik_dialog[1]
 plec = wynik_dialog[2]
 
@@ -60,9 +60,11 @@ done_text = visual.TextStim(win, text=done_cfg['text']['content'], pos=done_cfg[
                             height=done_cfg['text']['height'],
                             anchorHoriz='center', anchorVert='center')
 
+# === FUNKCJE ===
 
+# == GENEROWANIE POZYCJI BLOKÓW ==
 def generate_non_overlapping_positions(n):
-    """Generowanie pozycji dla n bloków na ekranie, tak aby się nie nakładały"""
+    """Losowanie n pozycji dla bloków na ekranie, tak aby na siebie nie nachodziły"""
     positions = []
     attempts = config['blocks']['attempts']
     margin_y = config['blocks']['margin_y'] # Margines przy górnej i dolnej krawędzi ekranu
@@ -72,7 +74,7 @@ def generate_non_overlapping_positions(n):
         y = random.uniform(-0.45 + margin_y, 0.45 - margin_y)
         pos = (x, y)
 
-        # Sprawdzenie kolizji pozycji z już istniejącymi blokami
+        # Sprawdzenie, czy położenie nowego bloku koliduje z położeniem już istniejących bloków
         overlap = False
         for px, py in positions:
             if abs(x - px) <= block_size * 1.2 and abs(y - py) <= block_size * 1.2:
@@ -86,7 +88,7 @@ def generate_non_overlapping_positions(n):
 
     return positions
 
-
+# == TWORZENIE BLOKÓW ==
 def create_blocks(colors):
     """Tworzenie na ekranie bloków o podanych kolorach, w losowych, niekolidujących pozycjach"""
     positions = generate_non_overlapping_positions(n_blocks)
@@ -100,9 +102,8 @@ def create_blocks(colors):
 
     return blocks
 
-
+# === RYSOWANIE BLOKÓW I PRZYCISKU ZAKOŃCZ ===
 def draw_blocks(blocks, draw_done_button=True):
-    """Rysowanie na ekranie bloków i przycisku ZAKOŃCZ"""
     for b in blocks:
         b.draw()
 
@@ -116,9 +117,9 @@ def show_blocks(blocks):
     draw_blocks(blocks)
     win.flip()
 
-
+# === MIGANIE BLOKÓW WEDŁUG SEKWENCJI ===
 def flash_sequence(blocks, sequence):
-    """Wyświetlenie sekwencji migających bloków, zgodnie z kolejnością"""
+    """Wyświetlenie sekwencji migających bloków, zgodnie z daną kolejnością"""
     for i in sequence:
         orig_color = blocks[i].fillColor
 
@@ -136,9 +137,9 @@ def flash_sequence(blocks, sequence):
         win.flip()
         core.wait(config['timing']['flash_off'])  # Przerwa między mignięciami
 
-
+# === ZEBRANIE ODPOWIEDZI ===
 def get_response(blocks, target_sequence, session_type="training"):
-    """Pobranie odpowiedzi od uczestnika"""
+    """Pobranie odpowiedzi od uczestnika - kliknięcia, kolejność, czas odpowiedzi"""
     response = []
     clicked = set()
     mouse = event.Mouse(visible=True)
@@ -173,7 +174,7 @@ def get_response(blocks, target_sequence, session_type="training"):
                     response.append(i)
                     clicked.add(i)
 
-                    # Wizualna odpowiedź na kliknięcie
+                    # Wizualna odpowiedź na kliknięcie - miganie bloku
                     orig_color = b.fillColor
                     b.fillColor = config['colors']['click']
                     b.lineColor = config['colors']['click']
@@ -192,7 +193,7 @@ def get_response(blocks, target_sequence, session_type="training"):
 
         core.wait(config['timing']['response_poll_interval'])
 
-    rt = rt_clock.getTime()
+    rt = rt_clock.getTime() #Czas całkowity od początku do kliknięcia przycisku ZAKOŃCX
     correct = is_correct(target_sequence, response)
 
     # Wyświetlenie informacji zwrotnej dla uczestnika
@@ -210,14 +211,14 @@ def get_response(blocks, target_sequence, session_type="training"):
 
     return response, rt, correct, inter_click_times
 
-
+# === SPRAWDZENIE POPRAWNOŚCI ===
 def is_correct(target, response):
     """Porównanie odpowiedzi uczestnika z sekwencją docelową i zwrócenie True jeśli idealnie się ze sobą pokrywają"""
     return target == response
 
 
 def show_message(text, wait_for_key=True):
-    """Wyświetlenie wiadomoś ci tekstowej na ekranie, opcjonalne oczekiwanie na naciśnięcie spacji"""
+    """Wyświetlenie wiadomości tekstowej na ekranie, oczekiwanie na naciśnięcie spacji"""
     msg = visual.TextStim(win, text=text, color=config['colors']['text_default'], height=config['text']['default_height'], wrapWidth=config['text']['wrap_width'],
                           anchorHoriz='center', anchorVert='center')
     msg.draw()
@@ -236,7 +237,7 @@ def show_ready_prompt():
 
 
 def show_break(stage):
-    """Wyświetlenie ekranu przerwy między etapami"""
+    """Wyświetlenie komunikatu informującego o zakończeniu etapu i zapowiadającego przerwę między etapami"""
     msg = visual.TextStim(win, text=f"Przerwa 5 sekund.\nEtap {stage} z 3 ukończony.",
                           color=config['colors']['text_default'], height=config['text']['default_height'], anchorHoriz='center', anchorVert='center')
     msg.draw()
@@ -352,10 +353,13 @@ for session_num, color in [(1, first_color), (2, second_color)]:
         show_break(2)
 
     # === PODSUMOWANIE ===
-# Obliczenie zakresu pamięci (Corsi span) - maksymalnej długości poprawnie wskazanej sekwencji w każdej sesji
-# Filtrowanie odpowiedzi (RESULTS) przez pętlę
+# Obliczenie zakresu pamięci (Corsi span) - długości najdłuższej poprawnie wskazanej sekwencji w każdej sesji
+# Filtrowanie jedynie poprawnych odpowiedzi dla każdej sesji
 span1 = max([len(row[6]) for row in RESULTS if row[3] == 1 and row[8]], default=0)
 span2 = max([len(row[6]) for row in RESULTS if row[3] == 2 and row[8]], default=0)
+# row[6] - zawiera zaprezentowaną sekwencję
+# len(...) - długość zaprezentowanej sekwencji
+# max(...) - znalezienie najdłuższej pośród zaprezentowanych sekwencji
 
 final_msg = (f"Zadanie zakończone\n\nTwój zakres pamięci (Corsi span):\n"
              f"Sesja 1 ({first_color}): {span1} elementów\n"
@@ -364,7 +368,7 @@ final_msg = (f"Zadanie zakończone\n\nTwój zakres pamięci (Corsi span):\n"
 show_message(final_msg)
 
 # === ZAPIS DANYCH ===
-# Dane zapisane do pliku CSV
+# Tworzenie pliku CSV, w któym zapisywane są dane
 results_file = config['results']['file']
 file_exists = os.path.isfile(results_file)
 
