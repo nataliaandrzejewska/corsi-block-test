@@ -355,9 +355,11 @@ for session_num, color in [(1, first_color), (2, second_color)]:
     # === PODSUMOWANIE ===
 # Obliczenie zakresu pamięci (Corsi span) - długości najdłuższej poprawnie wskazanej sekwencji w każdej sesji
 # Filtrowanie jedynie poprawnych odpowiedzi dla każdej sesji
-span1 = max([len(row[6]) for row in RESULTS if row[3] == 1 and row[8]], default=0)
-span2 = max([len(row[6]) for row in RESULTS if row[3] == 2 and row[8]], default=0)
-# row[6] - zawiera zaprezentowaną sekwencję
+span1 = max([len(row[6]) for row in RESULTS if row[3] == 1 and row[8]], default=0) #sesja pierwsza
+span2 = max([len(row[6]) for row in RESULTS if row[3] == 2 and row[8]], default=0) #sesja druga
+# row[3] - numer sesji (0-trening, 1-sesja1, 2-sesja2)
+# row[6] - lista numerów bloków w sekwencji (np. [3,1,4])
+# row[8] - czy odpowiedź była poprawna (True/False)
 # len(...) - długość zaprezentowanej sekwencji
 # max(...) - znalezienie najdłuższej pośród zaprezentowanych sekwencji
 
@@ -375,14 +377,22 @@ file_exists = os.path.isfile(results_file)
 with open(results_file, 'a', encoding='utf-8', newline='') as f:
     writer = csv.writer(f)
 
-    # DOdanie nagłówku, jeśli plik nie istnieje
+    # Dodanie nagłówku, jeśli plik nie istnieje
     if not file_exists:
         writer.writerow([config['results']['headers']])
 
-        # Zapis każdego wiersza wyników
+    # Formatowanie danych przed zapisem:
+    # - Sekwencje i odpowiedzi zamieniamy na stringi oddzielone myślnikami
+    # - Czasy międzykliknięć formatujemy do 3 miejsc po przecinku
+    # - Czas reakcji również formatujemy do 3 miejsc
     for row in RESULTS:
         writer.writerow([
-            row[0], row[1], row[2], row[3], row[4], row[5],
+            row[0],  # ID uczestnika
+            row[1],  # Wiek
+            row[2],  # Płeć
+            row[3],  # Numer sesji
+            row[4],  # Kolor bloków
+            row[5],  # Długość sekwencji
             '-'.join(map(str, row[6])),  # Sekwencja
             '-'.join(map(str, row[7])) if row[7] else "Brak",  # Odpowiedź
             row[8],  # Poprawność
@@ -390,6 +400,5 @@ with open(results_file, 'a', encoding='utf-8', newline='') as f:
             row[10],  # Błędy
             f"{row[11]:.3f}"  # Czas reakcji
         ])
-
 win.close()
 core.quit()
