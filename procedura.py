@@ -289,9 +289,9 @@ show_message("Część treningowa", wait_for_key=False)
 core.wait(config['timing']['session_name_delay'])
 show_ready_prompt()
 
-# 3 próby treningowe z rosnącą trudnością
+# 3 próby treningowe o rosnącąej trudności
 for _ in range(config['experiment']['training_trials']):
-    # Zabezpieczenie przed sekwencjami dłuższymi niż liczba bloków
+    # Zabezpieczenie przed tworzeniem sekwencji dłuższych od liczby bloków
     if current_length > n_blocks:
         current_length = n_blocks
 
@@ -313,7 +313,7 @@ for _ in range(config['experiment']['training_trials']):
 show_break(1)
 
 # === SESJE EKSPERYMENTALNE ===
-# Losowanie kolejności kolorów
+# Losowanie kolejności kolorów bloków (czerwony/niebieski)
 first_color = random.choice(['#FF0000', '#0000FF'])
 second_color = '#0000FF' if first_color == '#FF0000' else '#FF0000'
 
