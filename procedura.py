@@ -4,7 +4,7 @@ from psychopy import visual, event, core, gui, monitors
 import random
 import os
 import csv
-import yaml
+import yaml 
 
 # Wczytanie pliku konfiguracyjnego
 with open('config.yaml', 'r', encoding='utf-8') as f:
@@ -355,6 +355,8 @@ for session_num, color in [(1, first_color), (2, second_color)]:
     # === PODSUMOWANIE ===
 # Obliczenie zakresu pamięci (Corsi span) - długości najdłuższej poprawnie wskazanej sekwencji w każdej sesji
 # Filtrowanie jedynie poprawnych odpowiedzi dla każdej sesji
+#dlaczego row[6]  row[8]  itd -  to kolumna (czyli element listy row) w strukturze RESULTS
+#default=0 to zabezpieczenie na wypadek, gdyby uczestnik nie miał żadnych poprawnych odpowiedzi – wtedy maksymalna wartość to 0, żeby nie było błędu w działaniu funkcji max().
 span1 = max([len(row[6]) for row in RESULTS if row[3] == 1 and row[8]], default=0) #sesja pierwsza
 span2 = max([len(row[6]) for row in RESULTS if row[3] == 2 and row[8]], default=0) #sesja druga
 # row[3] - numer sesji (0-trening, 1-sesja1, 2-sesja2)
