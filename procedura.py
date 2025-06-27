@@ -18,7 +18,7 @@ if monitor_name not in monitors.getAllMonitors():
     mon.setWidth(config['monitor']['width_cm'])  # Szerokość ekranu w cm
     mon.setDistance(config['monitor']['distance_cm'])  # Odległość oczu od ekranu w cm
     mon.setSizePix(config['monitor']['resolution'])  # Rozdzielczość ekranu
-    mon.save()
+    mon.save()  # zapisujemy te ustawienia w bazie PsychoPy
 
 # === OKNO DIALOGOWE DLA UCZESTNIKA ===
 info_dialog = gui.Dlg(title="Dane uczestnika")
@@ -32,7 +32,7 @@ if not info_dialog.OK:
     core.quit() #Zakończenie programu, gdy okno dialogowe zostaje anulowane
 
 PART_ID = wynik_dialog[0] #ID uczestnika, użuwane do zapisu danych
-wiek = wynik_dialog[1]
+wiek = wynik_dialog[1] 
 plec = wynik_dialog[2]
 
 # === PARAMETRY EKSPERYMENTU ===
@@ -50,11 +50,12 @@ conf = {
 }
 
 # === Przycisk ZAKOŃCZ – definiowany raz ===
-done_cfg = config['buttons']['done']
+done_cfg = config['buttons']['done'] # fragment konfiguracji opisujący przycisk
 done_button = visual.Rect(win, width=done_cfg['width'], height=done_cfg['height'],
                           pos=done_cfg['pos'],
                           fillColor=done_cfg['color_fill'],
                           lineColor=done_cfg['color_line'])
+# tekst "Zakończ" wewnątrz przycisku
 done_text = visual.TextStim(win, text=done_cfg['text']['content'], pos=done_cfg['pos'],
                             color=done_cfg['text']['color'],
                             height=done_cfg['text']['height'],
@@ -65,40 +66,40 @@ done_text = visual.TextStim(win, text=done_cfg['text']['content'], pos=done_cfg[
 # == GENEROWANIE POZYCJI BLOKÓW ==
 def generate_non_overlapping_positions(n):
     """Losowanie n pozycji dla bloków na ekranie, tak aby na siebie nie nachodziły"""
-    positions = []
-    attempts = config['blocks']['attempts']
+    positions = [] # lista pozycji, które już wybraliśmy
+    attempts = config['blocks']['attempts'] # licznik prób (startuje od wartości z config)
     margin_y = config['blocks']['margin_y'] # Margines przy górnej i dolnej krawędzi ekranu
 
     while len(positions) < n and attempts < config['blocks']['max_overlap_attempts']:
         x = random.uniform(-0.45, 0.45)
-        y = random.uniform(-0.45 + margin_y, 0.45 - margin_y)
-        pos = (x, y)
+        y = random.uniform(-0.45 + margin_y, 0.45 - margin_y)  # losujemy Y z uwzględnieniem marginesu gór/dół
+        pos = (x, y)  # potencjalna pozycja
 
         # Sprawdzenie, czy położenie nowego bloku koliduje z położeniem już istniejących bloków
         overlap = False
-        for px, py in positions:
+        for px, py in positions: # iterujemy po istniejących pozycjach
             if abs(x - px) <= block_size * 1.2 and abs(y - py) <= block_size * 1.2:
                 overlap = True
                 break
 
-        if not overlap:
+        if not overlap:  # jeśli OK, dodaj pozycję
             positions.append(pos)
 
-        attempts += 1
+        attempts += 1 # inkrementujemy licznik prób
 
-    return positions
+    return positions # zwracamy listę wylosowanych pozycji
 
 # == TWORZENIE BLOKÓW ==
 def create_blocks(colors):
     """Tworzenie na ekranie bloków o podanych kolorach, w losowych, niekolidujących pozycjach"""
-    positions = generate_non_overlapping_positions(n_blocks)
-    blocks = []
+    positions = generate_non_overlapping_positions(n_blocks)  # pozycje dla wszystkich bloków
+    blocks = []  # tu przechowamy utworzone obiekty
 
-    for i in range(n_blocks):
+    for i in range(n_blocks): # dla każdego bloku
         rect = visual.Rect(win, width=block_size, height=block_size,
                            fillColor=colors[i], lineColor=colors[i],
-                           pos=positions[i], name=f'block{i}')
-        blocks.append(rect)
+                           pos=positions[i], name=f'block{i}') # tworzymy obiekt Rect
+        blocks.append(rect)  # dodajemy do listy
 
     return blocks
 
@@ -121,11 +122,11 @@ def show_blocks(blocks):
 def flash_sequence(blocks, sequence):
     """Wyświetlenie sekwencji migających bloków, zgodnie z daną kolejnością"""
     for i in sequence:
-        orig_color = blocks[i].fillColor
+        orig_color = blocks[i].fillColor # zapamiętujemy oryginalny kolor bloku
 
         # Podświetlenie bloku
-        blocks[i].fillColor = config['colors']['flash']
-        blocks[i].lineColor = config['colors']['flash']
+        blocks[i].fillColor = config['colors']['flash']  # zmieniamy kolor wypełnienia
+        blocks[i].lineColor = config['colors']['flash'] # i obramowania
         draw_blocks(blocks)
         win.flip()
         core.wait(config['timing']['flash_on'])  # Czas podświetlenia bloku
@@ -140,17 +141,17 @@ def flash_sequence(blocks, sequence):
 # === ZEBRANIE ODPOWIEDZI ===
 def get_response(blocks, target_sequence, session_type="training"):
     """Pobranie odpowiedzi od uczestnika - kliknięcia, kolejność, czas odpowiedzi"""
-    response = []
-    clicked = set()
-    mouse = event.Mouse(visible=True)
-    rt_clock = core.Clock()
-    inter_click_times = []
+    response = [] # kolejność kliknięć (numery bloków)
+    clicked = set() # zbiór bloków już klikniętych (aby uniknąć podwójnego kliknięcia)
+    mouse = event.Mouse(visible=True)  # obiekt myszy (widoczny kursor)
+    rt_clock = core.Clock()  # zegar do pomiaru RT
+    inter_click_times = [] # lista czasów między kliknięciami
 
-    rt_clock.reset()
-    responded = False
-    last_click_time = None
+    rt_clock.reset()  # start pomiaru czasu od zera
+    responded = False  # flaga – czy kliknięto przycisk Zakończ
+    last_click_time = None # czas poprzedniego kliknięcia
 
-    while not responded:
+    while not responded: 
         # Sprawdzanie klawiszy wyjścia
         keys = event.getKeys()
         if 'escape' in keys or 'q' in keys:
@@ -164,15 +165,15 @@ def get_response(blocks, target_sequence, session_type="training"):
             # Sprawdzenie, czy kliknięto w blok
             for i, b in enumerate(blocks):
                 if b.contains(mouse) and i not in clicked:
-                    current_time = rt_clock.getTime()
+                    current_time = rt_clock.getTime() # czas aktualnego kliknięcia
 
                     # Zapis czasu między kliknięciami
                     if last_click_time is not None:
                         inter_click_times.append(current_time - last_click_time)
-                    last_click_time = current_time
+                    last_click_time = current_time   # aktualizujemy
 
-                    response.append(i)
-                    clicked.add(i)
+                    response.append(i) # dodajemy indeks bloku do odpowiedzi
+                    clicked.add(i)  # oznaczamy blok jako już kliknięty
 
                     # Wizualna odpowiedź na kliknięcie - miganie bloku
                     orig_color = b.fillColor
@@ -194,7 +195,7 @@ def get_response(blocks, target_sequence, session_type="training"):
         core.wait(config['timing']['response_poll_interval'])
 
     rt = rt_clock.getTime() #Czas całkowity od początku do kliknięcia przycisku ZAKOŃCX
-    correct = is_correct(target_sequence, response)
+    correct = is_correct(target_sequence, response) # porównujemy z prawidłową sekwencją
 
     # Wyświetlenie informacji zwrotnej dla uczestnika
     fb_cfg = config['feedback']
@@ -224,7 +225,7 @@ def show_message(text, wait_for_key=True):
     msg.draw()
     win.flip()
     if wait_for_key:
-        event.waitKeys(keyList=['space'])
+        event.waitKeys(keyList=['space']) # czekamy, aż użytkownik wciśnie spację
 
 
 def show_ready_prompt():
@@ -249,9 +250,10 @@ def run_sequence_phase(blocks, sequence):
     """Przebieg fazy prezentacji sekwencji bloków"""
     draw_blocks(blocks)
     win.flip()
-    core.wait(config['timing']['pre_sequence_delay'])
+    core.wait(config['timing']['pre_sequence_delay'])  # pauza przed sekwencją
 
-    flash_sequence(blocks, sequence)
+
+    flash_sequence(blocks, sequence) # właściwe miganie
 
     # Wyświetlenie komunikatu "TERAZ", sygnalizującego moment rozpoczęcia odpowiedzi
     prompt = visual.TextStim(win, text=config['start']['text'], pos=config['start']['position'], color=config['start']['color'], height=config['start']['height'],
@@ -263,9 +265,9 @@ def run_sequence_phase(blocks, sequence):
 
 
 # === WCZYTANIE INSTRUKCJI ===
-try:
-    with open('instrukcja.txt', 'r', encoding='utf-8') as f:
-        instrukcja_text = f.read().format(PART_ID=PART_ID, plec=plec, wiek=wiek)
+try: 
+    with open('instrukcja.txt', 'r', encoding='utf-8') as f:  # otwieramy plik z instrukcją
+        instrukcja_text = f.read().format(PART_ID=PART_ID, plec=plec, wiek=wiek) # personalizujemy tekst
 
         # Wyświetlenie instrukcji z mniejszą czcionką
     instrukcja_stim = visual.TextStim(win, text=instrukcja_text,
@@ -283,8 +285,8 @@ except FileNotFoundError:
     core.quit()
 
 # === FAZA TRENINGOWA ===
-current_length = config['experiment']['initial_sequence_length']
-blocks = create_blocks(conf["BLOCK_COLOR_TRAINING"])
+current_length = config['experiment']['initial_sequence_length']  # startowa długość sekwencji
+blocks = create_blocks(conf["BLOCK_COLOR_TRAINING"]) # tworzymy szare bloki
 show_message("Część treningowa", wait_for_key=False)
 core.wait(config['timing']['session_name_delay'])
 show_ready_prompt()
@@ -303,14 +305,14 @@ for _ in range(config['experiment']['training_trials']):
     RESULTS.append([
         PART_ID, wiek, plec, 0, '#808080', len(sequence),
         sequence, resp, correct, ict,
-        len(ict) - sum([1 for x in ict if x > 10]), rt
+        len(ict) - sum([1 for x in ict if x > 10]), rt  # obliczamy liczbę długich przerw >10 s
     ])
 
     # Zwiększ trudność po poprawnym wykonaniu
     if correct:
         current_length += 1
 
-show_break(1)
+show_break(1)   # przerwa po treningu
 
 # === SESJE EKSPERYMENTALNE ===
 # Losowanie kolejności kolorów bloków (czerwony/niebieski)
@@ -350,7 +352,7 @@ for session_num, color in [(1, first_color), (2, second_color)]:
             consecutive_errors += 1
 
     if session_num == 1:
-        show_break(2)
+        show_break(2)  # przerwa po pierwszej sesji
 
     # === PODSUMOWANIE ===
 # Obliczenie zakresu pamięci (Corsi span) - długości najdłuższej poprawnie wskazanej sekwencji w każdej sesji
